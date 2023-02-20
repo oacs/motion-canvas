@@ -4,10 +4,12 @@ import {ComponentChild, JSX} from 'preact';
 import {useCallback, useMemo, useRef} from 'preact/hooks';
 import {useDrag, useStorage} from '../../hooks';
 import clsx from 'clsx';
+import {ShortcutsProvider} from '../../contexts/shorcuts';
 
 interface ResizeableLayoutProps {
   start: ComponentChild;
   end: ComponentChild;
+  footer: ComponentChild;
   vertical?: boolean;
   size?: number;
   id?: string;
@@ -17,6 +19,7 @@ interface ResizeableLayoutProps {
 export function ResizeableLayout({
   start,
   end,
+  footer,
   vertical = false,
   size = 0.3,
   id = null,
@@ -45,18 +48,21 @@ export function ResizeableLayout({
   }, [currentSize, vertical, resizeable]);
 
   return (
-    <div
-      ref={containerRef}
-      className={clsx(styles.root, {
-        [styles.vertical]: vertical,
-        [styles.resizeable]: resizeable,
-      })}
-    >
-      <div className={styles.left} style={style}>
-        {start}
+    <ShortcutsProvider>
+      <div
+        ref={containerRef}
+        className={clsx(styles.root, {
+          [styles.vertical]: vertical,
+          [styles.resizeable]: resizeable,
+        })}
+      >
+        <div className={styles.left} style={style}>
+          {start}
+        </div>
+        <div onMouseDown={handleDrag} className={styles.separator} />
+        <div className={styles.right}>{end}</div>
+        <div className={styles.right}>{footer}</div>
       </div>
-      <div onMouseDown={handleDrag} className={styles.separator} />
-      <div className={styles.right}>{end}</div>
-    </div>
+    </ShortcutsProvider>
   );
 }

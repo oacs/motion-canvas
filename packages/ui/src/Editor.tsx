@@ -1,6 +1,7 @@
 import {Sidebar} from './components/sidebar';
 import {Timeline} from './components/timeline';
 import {Viewport} from './components/viewport';
+import {Footer} from './components/footer/Footer';
 import {ResizeableLayout} from './components/layout';
 import {useState} from 'preact/hooks';
 
@@ -21,6 +22,7 @@ export function Editor() {
         />
       }
       end={<Timeline />}
+      footer={<Footer />}
     />
   );
 }
