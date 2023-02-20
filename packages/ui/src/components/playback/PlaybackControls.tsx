@@ -31,10 +31,12 @@ export function PlaybackControls() {
           return;
         }
         switch (event.key) {
+          // shortcut to toggle playback
           case ' ':
             event.preventDefault();
             player.togglePlayback();
             break;
+          // shortcut to move to previous frame
           case 'ArrowLeft':
             event.preventDefault();
             if (event.shiftKey) {
@@ -44,6 +46,7 @@ export function PlaybackControls() {
 
             player.requestPreviousFrame();
             break;
+          // shortcut to move to next frame
           case 'ArrowRight':
             event.preventDefault();
             if (event.shiftKey) {
@@ -53,9 +56,12 @@ export function PlaybackControls() {
 
             player.requestNextFrame();
             break;
+
+          // shortcut to toggle audio
           case 'm':
             player.toggleAudio();
             break;
+          // shortcut to toggle loop
           case 'l':
             player.toggleLoop();
             break;

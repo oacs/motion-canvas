@@ -114,6 +114,7 @@ export function Timeline() {
     'keydown',
     useCallback(
       event => {
+        // shortcut to focus on the playhead
         if (event.key !== 'f') return;
         const frame = player.onFrameChanged.current;
         const maxOffset = sizes.fullLength - sizes.viewLength;

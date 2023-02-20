@@ -109,16 +109,21 @@ export function View() {
           return;
         }
         switch (event.key) {
+          // shortcut to reset zoom
           case '0': {
             resetZoom();
             break;
           }
+          // shortcut to zoom in
           case '=':
             setState({...state, zoom: state.zoom * (1 + ZOOM_SPEED)});
             break;
+          // shortcut to zoom out
           case '-':
             setState({...state, zoom: state.zoom * (1 - ZOOM_SPEED)});
             break;
+
+          // shortcut to toggle grid
           case "'":
             setState({...state, grid: !state.grid});
             break;
