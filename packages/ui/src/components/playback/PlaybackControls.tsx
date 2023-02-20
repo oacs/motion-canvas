@@ -7,7 +7,6 @@ import {Framerate} from './Framerate';
 import {useCallback} from 'preact/hooks';
 import {usePlayer} from '../../contexts';
 import clsx from 'clsx';
-import React from 'react';
 import {
   Pause,
   PhotoCamera,
@@ -18,10 +17,31 @@ import {
   VolumeOff,
   VolumeOn,
 } from '../icons';
-
+import {useShortcutsDispatch, Shortcut} from '../../contexts/shorcuts';
+export const playbackShortcuts: Shortcut[] = [
+  {
+    key: 'Space',
+    action: 'Toggle playback',
+  },
+  {
+    key: '←',
+    action: 'Previous frame',
+  },
+  {
+    key: '→',
+    action: 'Next frame',
+  },
+  {key: 'Shift + ←', action: 'Reset to first frame'},
+  {key: 'Shift + →', action: 'Seek to last frame'},
+  {key: 'm', action: 'Toggle audio'},
+  {key: 'l', action: 'Toggle loop'},
+];
 export function PlaybackControls() {
   const player = usePlayer();
   const state = usePlayerState();
+  const changeShortcuts = useShortcutsDispatch();
+
+  changeShortcuts({type: 'add', shortcuts: [...playbackShortcuts]});
 
   useDocumentEvent(
     'keydown',

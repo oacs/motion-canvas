@@ -26,6 +26,7 @@ import {
   TimelineState,
 } from '../../contexts';
 import {useShortcutsDispatch} from '../../contexts/shorcuts';
+import {playbackShortcuts} from '../playback';
 
 const ZOOM_SPEED = 0.1;
 const ZOOM_MIN = 0.5;
@@ -114,7 +115,11 @@ export function Timeline() {
   const changeShortcuts = useShortcutsDispatch();
   changeShortcuts({
     type: 'add',
-    shortcut: {key: 'f', action: 'Focus Playhead'},
+    shortcuts: [{key: 'f', action: 'Focus Playhead'}],
+  });
+  changeShortcuts({
+    type: 'add',
+    shortcuts: playbackShortcuts,
   });
   useDocumentEvent(
     'keydown',

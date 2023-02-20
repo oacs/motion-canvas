@@ -1,15 +1,25 @@
-import {createContext, useContext, useReducer} from 'react';
+import React, {createContext, useContext, useReducer} from 'react';
 
-type Shortcut = {
+export type Shortcut = {
   key: string;
   action: string;
 };
 
-const ShortcutsContext = createContext(null);
-const ShortcutsDispatchContext = createContext(null);
+type Action = {
+  type: 'add' | 'remove';
+  shortcuts: Shortcut[];
+};
+
+type Reducer<S, A> = (prevState: S, action: A) => S;
+const initialshortcuts = [] as Shortcut[];
+const ShortcutsContext = createContext<Shortcut[]>(initialshortcuts);
+const ShortcutsDispatchContext = createContext<React.Dispatch<Action>>(null);
 
 export function ShortcutsProvider({children}) {
-  const [shortcuts, dispatch] = useReducer(shortcutsReducer, initialshortcuts);
+  const [shortcuts, dispatch] = useReducer<Reducer<Shortcut[], Action>>(
+    shortcutsReducer,
+    initialshortcuts,
+  );
 
   return (
     <ShortcutsContext.Provider value={shortcuts}>
@@ -28,24 +38,29 @@ export function useShortcutsDispatch() {
   return useContext(ShortcutsDispatchContext);
 }
 
-function shortcutsReducer(
-  shortcuts: Shortcut[],
-  action: {type: string; shortcut: Shortcut},
-) {
+function uniqBy<T extends Record<string, unknown>>(arr: T[], key: string) {
+  const seen = {} as Record<string, boolean>;
+  return arr.filter(item => {
+    const k = (item as any)?.[key];
+    return Object.hasOwn(seen, k) ? false : (seen[k] = true);
+  });
+}
+
+function shortcutsReducer(shortcuts: Shortcut[], action: Action) {
+  console.log('shortcutsReducer', {
+    shortcuts,
+    action,
+    concat: shortcuts.concat(action.shortcuts),
+    unique: uniqBy(action.shortcuts.concat(shortcuts), 'key'),
+  });
   switch (action.type) {
     case 'add': {
-      if (
-        shortcuts.find(
-          (shortcutItem: Shortcut) => shortcutItem.key === action.shortcut.key,
-        )
-      ) {
-        return shortcuts;
-      }
-      return [...shortcuts, action.shortcut];
+      return [...uniqBy(shortcuts.concat(action.shortcuts), 'key')];
     }
     case 'remove': {
       return shortcuts.filter(
-        (shortcutItem: Shortcut) => shortcutItem.key !== action.shortcut.key,
+        (shortcutItem: Shortcut) =>
+          !action.shortcuts.find(a => a.key === shortcutItem.key),
       );
     }
     default: {
@@ -53,5 +68,3 @@ function shortcutsReducer(
     }
   }
 }
-
-const initialshortcuts = [] as Shortcut[];
