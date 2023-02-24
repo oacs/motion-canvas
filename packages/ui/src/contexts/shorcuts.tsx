@@ -3,6 +3,7 @@ import React, {createContext, useContext, useReducer} from 'react';
 export type Shortcut = {
   key: string;
   action: string;
+  isGlobal?: boolean;
 };
 
 type Action = {
@@ -11,7 +12,18 @@ type Action = {
 };
 
 type Reducer<S, A> = (prevState: S, action: A) => S;
-const initialshortcuts = [] as Shortcut[];
+const initialshortcuts = [
+  //  Timeline shortcuts
+  //{key: 'f', action: 'Focus Playhead', isGlobal: true},
+  // Playback Controls Shortcuts
+  {key: 'Space', action: 'Toggle playback', isGlobal: true},
+  {key: '←', action: 'Previous frame', isGlobal: true},
+  {key: '→', action: 'Next frame', isGlobal: true},
+  {key: 'Shift + ←', action: 'Reset to first frame', isGlobal: true},
+  {key: 'Shift + →', action: 'Seek to last frame', isGlobal: true},
+  {key: 'm', action: 'Toggle audio', isGlobal: true},
+  {key: 'l', action: 'Toggle loop', isGlobal: true},
+] as Shortcut[];
 const ShortcutsContext = createContext<Shortcut[]>(initialshortcuts);
 const ShortcutsDispatchContext = createContext<React.Dispatch<Action>>(null);
 

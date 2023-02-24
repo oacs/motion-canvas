@@ -26,7 +26,6 @@ import {
   TimelineState,
 } from '../../contexts';
 import {useShortcutsDispatch} from '../../contexts/shorcuts';
-import {playbackShortcuts} from '../playback';
 
 const ZOOM_SPEED = 0.1;
 const ZOOM_MIN = 0.5;
@@ -113,14 +112,7 @@ export function Timeline() {
   );
 
   const changeShortcuts = useShortcutsDispatch();
-  changeShortcuts({
-    type: 'add',
-    shortcuts: [{key: 'f', action: 'Focus Playhead'}],
-  });
-  changeShortcuts({
-    type: 'add',
-    shortcuts: playbackShortcuts,
-  });
+  const timelineRef = useRef<HTMLDivElement>();
   useDocumentEvent(
     'keydown',
     useCallback(
@@ -144,7 +136,21 @@ export function Timeline() {
 
   return (
     <TimelineContextProvider state={state}>
-      <div className={styles.root}>
+      <div
+        onMouseEnter={() =>
+          changeShortcuts({
+            type: 'add',
+            shortcuts: [{key: 'f', action: 'Focus Playhead'}],
+          })
+        }
+        onMouseLeave={() =>
+          changeShortcuts({
+            type: 'remove',
+            shortcuts: [{key: 'f', action: 'Focus Playhead'}],
+          })
+        }
+        className={styles.root}
+      >
         <div
           className={styles.timelineWrapper}
           ref={containerRef}
